@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YKS Puan Hesaplama — TYT AYT Net Hesaplayıcı 2026 | sinavnetim.com</title>
+<meta name="description" content="YKS (TYT-AYT), LGS, KPSS, DGS ve ALES net ve puan hesaplama aracı. Doğru sayılarını gir, puanın anında hesaplansın. Güncel sınav verileriyle.">
+<meta name="keywords" content="yks hesaplama, tyt puan hesaplama, ayt net hesaplama, lgs hesaplama, kpss puan hesaplama, dgs hesaplama, ales hesaplama">
+<meta property="og:title" content="NetHesapla — Sınav Puan Hesaplama">
+<meta property="og:description" content="YKS, LGS, KPSS, DGS, ALES net ve puan hesapla. Hızlı, ücretsiz, güncel.">
+<meta property="og:type" content="website">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; background: #f6f7fb; color: #1a1a2e; line-height: 1.5; }
+  .kapsayici { max-width: 720px; margin: 0 auto; padding: 20px 16px 60px; }
+  header { text-align: center; padding: 24px 0 8px; }
+  .logo { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+  .logo span { color: #6d28d9; }
+  .slogan { color: #6b7280; font-size: 14px; margin-top: 2px; }
+  h1 { font-size: 20px; margin: 18px 0 12px; text-align: center; }
+  .sinavlar { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 16px; }
+  .sinavlar button { padding: 9px 18px; border-radius: 999px; border: 1px solid #e2e4ef; background: #fff; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; font-family: inherit; }
+  .sinavlar button.aktif { background: #6d28d9; color: #fff; border-color: #6d28d9; }
+  .kart { background: #fff; border: 1px solid #e8eaf3; border-radius: 16px; padding: 18px; margin-bottom: 14px; }
+  .kart h2 { font-size: 16px; margin-bottom: 12px; color: #111827; }
+  .bolum { margin-bottom: 4px; }
+  .bolum-baslik { font-size: 12px; font-weight: 700; color: #6d28d9; letter-spacing: 1px; margin: 10px 0 8px; }
+  .alanlar { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+  .alanlar button { flex: 1; min-width: 90px; padding: 8px 0; border-radius: 10px; border: 1px solid #e2e4ef; background: #fff; font-size: 13px; color: #4b5563; cursor: pointer; font-family: inherit; }
+  .alanlar button.aktif { border-color: #6d28d9; color: #6d28d9; background: #f3efff; font-weight: 700; }
+  .girisler { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .saha { display: flex; flex-direction: column; gap: 4px; }
+  .saha label { font-size: 12px; color: #6b7280; }
+  .saha input { width: 100%; padding: 10px 12px; border: 1px solid #dfe2ee; border-radius: 10px; font-size: 16px; font-variant-numeric: tabular-nums; font-family: inherit; color: #111827; background: #fff; }
+  .saha input:focus { outline: 2px solid #6d28d9; outline-offset: -1px; }
+  .sonuc { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .puan-kutu { border: 1px solid #e8eaf3; border-radius: 12px; padding: 12px 14px; text-align: center; }
+  .puan-kutu .t { font-size: 11px; color: #9ca3af; letter-spacing: 1px; }
+  .puan-kutu .d { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .puan-kutu.one .d { color: #6d28d9; font-size: 30px; }
+  footer { text-align: center; color: #9ca3af; font-size: 12px; margin-top: 28px; line-height: 1.8; }
+  .uyari { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; font-size: 12px; border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
+  @media (max-width: 480px) { .girisler { grid-template-columns: repeat(2, 1fr); } }
+
+  .tablo-sar { max-height: 380px; overflow-y: auto; border: 1px solid #e8eaf3; border-radius: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { position: sticky; top: 0; background: #6d28d9; color: #fff; text-align: left; padding: 9px 12px; font-size: 11px; letter-spacing: 0.5px; }
+  td { padding: 8px 12px; border-bottom: 1px solid #f1f2f8; }
+  tr:nth-child(even) td { background: #fafaff; }
+  tr.girer td { background: #ecfdf5; }
+  tr.girer td:first-child::before { content: "✓ "; color: #059669; font-weight: 700; }
+  .filtreler { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .filtreler input, .filtreler select { padding: 9px 12px; border: 1px solid #dfe2ee; border-radius: 10px; font-size: 14px; font-family: inherit; background: #fff; }
+  .filtreler input:focus, .filtreler select:focus { outline: 2px solid #6d28d9; outline-offset: -1px; }
+  .filtreler .arama { flex: 1; min-width: 150px; }
+  .karsilastir-btn { margin-top: 10px; width: 100%; padding: 11px; border: none; border-radius: 10px; background: #059669; color: #fff; font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit; }
+  .sayac-not { font-size: 12px; color: #6b7280; margin-top: 8px; }
+
+  .sinavlar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .sinavlar button { white-space: nowrap; flex: 0 0 auto; }
+  .girisler { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); }
+  .saha label { font-size: 11px; line-height: 1.25; min-height: 27px; overflow-wrap: break-word; }
+  .saha input { padding: 11px 12px; border-radius: 11px; }
+  .puan-kutu .sr { font-size: 11px; color: #6d28d9; font-weight: 700; margin-top: 3px; line-height: 1.3; }
+  .puan-kutu.one { border-color: #6d28d9; box-shadow: 0 4px 16px rgba(109,40,217,0.12); }
+  .puan-kutu .d { font-size: 26px; }
+  .puan-kutu.one .d { font-size: 32px; }
+  header .logo { font-size: 32px; }
+  .kart { box-shadow: 0 2px 10px rgba(20,20,60,0.04); }
+  h1 { font-size: 22px; }
+  @media (max-width: 400px) {
+    .girisler { grid-template-columns: repeat(2, 1fr); }
+    .puan-kutu .d { font-size: 22px; }
+    .puan-kutu.one .d { font-size: 26px; }
+  }
+
+  header { position: relative; }
+  .temaBtn { position: absolute; right: 0; top: 6px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dfe2ee; background: #fff; font-size: 17px; color: #4b5563; cursor: pointer; }
+  .girisler { display: flex; flex-direction: column; gap: 16px; }
+  .ders-cift { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px 12px; }
+  .dc-lbl { font-size: 12.5px; color: #6b7280; line-height: 1.3; }
+  .ders-cift input { width: 100%; box-sizing: border-box; padding: 16px 6px; font-size: 17px; text-align: center; border-radius: 14px; border: 1px solid #dfe2ee; background: #fff; }
+  .ders-cift input[readonly] { background: #f3f0ff; color: #6d28d9; font-weight: 700; }
+  @media (min-width: 640px) {
+    .girisler { display: grid; grid-template-columns: 1fr 1fr; column-gap: 26px; row-gap: 16px; }
+  }
+  .hesapla-btn { display: block; width: 100%; margin: 4px 0 14px; padding: 15px; border: none; border-radius: 14px;
+    background: linear-gradient(135deg, #6d28d9, #4f46e5); color: #fff; font-size: 17px; font-weight: 800;
+    letter-spacing: 2px; cursor: pointer; box-shadow: 0 6px 20px rgba(109,40,217,0.35); font-family: inherit;
+    transition: transform 0.08s; touch-action: manipulation; }
+  .hesapla-btn:active { transform: scale(0.98); }
+  .puan-kutu .sr { overflow-wrap: anywhere; word-break: break-word; }
+  /* gece modu */
+  body.tema-koyu { background: #12121c; color: #e8e8f0; }
+  body.tema-koyu h1, body.tema-koyu h2 { color: #f0f0f5; }
+  body.tema-koyu .kart { background: #1b1b28; border-color: #2c2c3e; }
+  body.tema-koyu .sinavlar button { background: #1b1b28; border-color: #2c2c3e; color: #b8b8cc; }
+  body.tema-koyu .sinavlar button.aktif { background: #6d28d9; color: #fff; border-color: #6d28d9; }
+  body.tema-koyu .alanlar button { background: #1b1b28; border-color: #2c2c3e; color: #b8b8cc; }
+  body.tema-koyu .alanlar button.aktif { background: #2b2140; color: #c4b5fd; border-color: #6d28d9; }
+  body.tema-koyu .saha input { background: #23232f; border-color: #34344a; color: #f0f0f5; }
+  body.tema-koyu .saha label { color: #9a9ab0; }
+  body.tema-koyu .dc-lbl { color: #9a9ab0; }
+  body.tema-koyu .ders-cift input { background: #23232f; border-color: #34344a; color: #f0f0f5; }
+  body.tema-koyu .ders-cift input[readonly] { background: #2b2140; color: #c4b5fd; }
+  body.tema-koyu .puan-kutu { border-color: #2c2c3e; background: #1b1b28; }
+  body.tema-koyu .puan-kutu .t { color: #8a8aa0; }
+  body.tema-koyu .puan-kutu .d { color: #fff; }
+  body.tema-koyu .puan-kutu .sr { color: #a78bfa; }
+  body.tema-koyu .uyari { background: #2b2410; border-color: #5a4a1a; color: #e8c46a; }
+  body.tema-koyu footer { color: #66667a; }
+  body.tema-koyu .temaBtn { background: #1b1b28; border-color: #34344a; color: #e8e8f0; }
+
+  .hero { text-align: center; padding: 30px 0 6px; }
+  .hero-t { font-size: 34px; line-height: 1.15; letter-spacing: -0.5px; color: #111827; }
+  .hero-t span { background: linear-gradient(90deg, #6d28d9, #4f46e5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero-s { color: #6b7280; font-size: 14px; margin-top: 10px; }
+  body.tema-koyu .hero-t { color: #f0f0f5; }
+  body.tema-koyu .hero-s { color: #9a9ab0; }
+  .kart { border-radius: 20px; padding: 22px; border: none; box-shadow: 0 4px 24px rgba(20,20,60,0.06); }
+  body.tema-koyu .kart { border: 1px solid #2c2c3e; box-shadow: none; }
+  .sinavlar { justify-content: flex-start; gap: 8px; padding-left: 2px; }
+  .sinavlar button { padding: 10px 22px; font-size: 14px; }
+  .puan-kutu { border-radius: 16px; padding: 16px; }
+
+  .guven { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .guven span { font-size: 11.5px; font-weight: 600; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 999px; padding: 4px 12px; }
+  body.tema-koyu .guven span { background: #0f2a1e; border-color: #1d4d38; color: #6ee7b7; }
+  .canli { display: none; text-align: center; font-size: 13px; font-weight: 600; color: #6d28d9; background: #f3f0ff; border: 1px solid #ddd6fe; border-radius: 12px; padding: 10px; margin-bottom: 12px; }
+  body.tema-koyu .canli { background: #2b2140; border-color: #4c3a78; color: #c4b5fd; }
+  .hero-t span { background: linear-gradient(90deg, #6d28d9, #4f46e5, #38bdf8, #6d28d9); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: heroAkis 6s linear infinite; }
+  @keyframes heroAkis { to { background-position: 300% 0; } }
+  .sinavlar button, .alanlar button, .temaBtn, .hesapla-btn { transition: all 0.15s ease; }
+  .sinavlar button:hover, .alanlar button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(109,40,217,0.15); }
+  .puan-kutu { opacity: 0; transform: translateY(8px); animation: kutuGel 0.45s ease forwards; }
+  .puan-kutu:nth-child(2) { animation-delay: 0.07s; }
+  .puan-kutu:nth-child(3) { animation-delay: 0.14s; }
+  .puan-kutu:nth-child(4) { animation-delay: 0.21s; }
+  @keyframes kutuGel { to { opacity: 1; transform: translateY(0); } }
+
+  .ayt-grup { grid-column: 1 / -1; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #6d28d9; margin-top: 6px; }
+  body.tema-koyu .ayt-grup { color: #a78bfa; }
+  .sonuc-tablosu { grid-column: 1 / -1; overflow-x: auto; }
+  .sonuc-tablosu table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .sonuc-tablosu th { background: linear-gradient(135deg, #6d28d9, #4f46e5); color: #fff; padding: 11px 12px; text-align: left; font-size: 11.5px; letter-spacing: 0.5px; }
+  .sonuc-tablosu td { padding: 11px 12px; border-bottom: 1px solid #eef0f7; }
+  .sonuc-tablosu tr:nth-child(even) td { background: #fafaff; }
+  body.tema-koyu .sonuc-tablosu td { border-color: #26263a; }
+  body.tema-koyu .sonuc-tablosu tr:nth-child(even) td { background: #22222f; }
+
+  .iki-kolon { display: flex; flex-direction: column; gap: 14px; }
+  @media (min-width: 940px) {
+    .iki-kolon { display: grid; grid-template-columns: 5fr 7fr; gap: 14px; align-items: start; }
+  }
+  .ayt-grup { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+  .ayt-grup::after { content: "▾"; font-size: 12px; transition: transform 0.2s; }
+  .ayt-grup.kapali::after { transform: rotate(-90deg); }
+  .ayt-grup-ic { display: contents; }
+  .ayt-grup-ic.gizli { display: none; }
+  .hero { padding: 18px 0 4px !important; }
+  .hero-t { font-size: 26px !important; }
+  .hero-s { margin-top: 6px !important; font-size: 13px !important; }
+  .guven { margin-top: 10px !important; }
+
+  .sayfa-bas { text-align: center; padding: 8px 0 2px; }
+  .sb-t { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; color: #111827; }
+  .sb-s { font-size: 12.5px; color: #6b7280; margin-top: 2px; }
+  body.tema-koyu .sb-t { color: #f0f0f5; }
+  body.tema-koyu .sb-s { color: #9a9ab0; }
+  .grup-btnlar { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 4px; }
+  .grup-btn { padding: 14px 4px; border-radius: 16px; border: 1.5px solid #e2e4f0; background: #fff; font-family: inherit; font-size: 13px; font-weight: 700; color: #6b7280; cursor: pointer; transition: all 0.15s; touch-action: manipulation; }
+  .grup-btn.aktif { background: linear-gradient(135deg, #6d28d9, #4f46e5); color: #fff; border-color: transparent; box-shadow: 0 4px 14px rgba(109,40,217,0.3); }
+  .grup-btn:active { transform: scale(0.96); }
+  body.tema-koyu .grup-btn { background: #23232f; border-color: #34344a; color: #b8b8cc; }
+  body.tema-koyu .grup-btn.aktif { color: #fff; }
+
+  .kart#sonuclar { scroll-margin-top: 10px; }
+  .hesapla-btn { margin: 4px 0 14px; }
+
+  .sb-t .grad { background: linear-gradient(90deg, #6d28d9, #4f46e5, #38bdf8, #6d28d9); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: akis 5s linear infinite; }
+
+  .sonuc-tablosu .th-yer { background: linear-gradient(135deg, #4c1d95, #6d28d9); }
+  .sonuc-tablosu .td-yer { background: #f5f3ff; font-weight: 700; color: #5b21b6; }
+  .sonuc-tablosu tr:nth-child(even) .td-yer { background: #efecfe; }
+  body.tema-koyu .sonuc-tablosu .td-yer { background: #2b2140; color: #c4b5fd; }
+  body.tema-koyu .sonuc-tablosu tr:nth-child(even) .td-yer { background: #312653; }
+
+  @media (max-width: 600px) {
+    .sonuc-tablosu thead { display: none; }
+    .sonuc-tablosu table, .sonuc-tablosu tbody { display: block; }
+    .sonuc-tablosu tr { display: block; border: 1px solid #e8eaf3; border-radius: 14px; margin-bottom: 10px; background: #fff; overflow: hidden; }
+    .sonuc-tablosu td { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-bottom: 1px solid #f1f2f8; font-size: 14px; }
+    .sonuc-tablosu td:last-child { border-bottom: none; }
+    .sonuc-tablosu td::before { content: attr(data-label); font-size: 10.5px; color: #9ca3af; font-weight: 600; letter-spacing: 0.3px; }
+    body.tema-koyu .sonuc-tablosu tr { background: #1b1b28; border-color: #2c2c3e; }
+    body.tema-koyu .sonuc-tablosu td { border-color: #26263a; }
+  }
+
+  .sonuc-cta { display: block; text-align: center; margin: 12px 0; padding: 15px; border-radius: 14px;
+    background: linear-gradient(135deg, #059669, #10b981); color: #fff; font-weight: 800; font-size: 15.5px;
+    text-decoration: none; box-shadow: 0 6px 18px rgba(5,150,105,0.3); }
+  .sonuc-cta:hover { filter: brightness(1.06); }
+</style>
+<meta name="google-site-verification" content="hC3FCywEa1X5X2-nJQ16MJ50VPUu-BHk4L2NOMPrXtA">
+<script src="https://cdn.counter.dev/script.js" data-id="879c2efc-1b4e-4c6e-af39-744c50ae3f02" data-utcoffset="3"></script>
+</head>
+<body>
+<div class="kapsayici">
+  <header>
+    <a class="logo" href="index.html" style="text-decoration:none;color:inherit" style="display:flex;align-items:center;gap:8px"><svg width="30" height="30" viewBox="0 0 26 26" style="flex-shrink:0"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs><rect x="1" y="1" width="24" height="24" rx="8" fill="url(#lg)"/><path d="M6 19 L6 8.5 L10.5 14.5 L13 10.5 L15.5 14.5 L20 8.5 L20 19" stroke="#fff" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="8.5" r="2" fill="#fff"/></svg>Net<span>Hesapla</span></a>
+    <button class="temaBtn" id="temaBtn" aria-label="Gece modu">☾</button>
+    <div class="slogan">YKS · LGS · KPSS · DGS · ALES — net ve puan hesaplama</div>
+  </header>
+
+  <div class="sayfa-bas">
+    <div class="sb-t">YKS Puan <span class="grad">Hesaplama</span></div>
+    <div class="sb-s">2026 gerçek katsayıları · TYT + AYT · sıralama tahmini</div>
+  </div>
+
+  <div class="uyari">Hesaplama <b>2026 gerçekleşen sınavın katsayılarıyla</b> yapılır. <b>4 yanlış 1 doğruyu götürür.</b> Sıralamalar, ÖSYM'in resmi 2026 yerleştirme verilerine dayanır. Kesin sonuç için ÖSYM belgenizi esas alın.</div>
+
+  <div class="sinavlar" id="sinavlar"></div>
+
+  <div class="iki-kolon">
+  <div class="kart">
+    <h2 id="kartBaslik">TYT</h2>
+    <div class="alanlar" id="alanlar" style="display:none"></div>
+    <div class="girisler" id="girisler"></div>
+  </div>
+
+  <div class="kart" id="kart2" style="display:none">
+    <h2 id="kart2Baslik">AYT</h2>
+    <div class="alanlar" id="alanlar2" style="display:none"></div>
+    <div class="girisler" id="girisler2"></div>
+  </div>
+
+  </div>
+  <button class="hesapla-btn" id="hesaplaBtn">HESAPLA</button>
+  <div class="kart" id="kartDiploma" style="display:none">
+    <h2>Diploma / Ek Puan</h2>
+    <div class="girisler" id="girislerDiploma"></div>
+  </div>
+  <a id="sonucCta" class="sonuc-cta" href="taban-puanlari.html" style="display:none">Bu puanla hangi bölümlere giderim? →</a>
+
+  </div>
+  <div class="canli" id="canli"></div>
+  <div class="kart sonuc" id="sonuclar"></div>
+  
+
+  </div>
+
+  <footer>
+    <a href="yks-puan-hesaplama.html">YKS Puanı Nasıl Hesaplanır?</a> · <a href="tyt-net-hesaplama.html">TYT Net</a> · <a href="ayt-net-hesaplama.html">AYT Net</a> · <a href="obp-diploma-puani.html">OBP Nedir?</a> · <a href="yks-katsayilari.html">2026 Katsayıları</a> · <a href="lgs-net-hesaplama.html">LGS Net</a> · <a href="kpss-puan-hesaplama.html">KPSS Puan</a> · <a href="dgs-puan-hesaplama.html">DGS Puan</a> · <a href="ales-puan-hesaplama.html">ALES Puan</a> · <a href="yks-siralama-tahmini.html">Sıralama Tahmini</a> · <a href="tyt-baraj-05-net.html">TYT Barajı</a> · <a href="tyt-ayt-farki.html">TYT-AYT Farkı</a> · <a href="deneme-net-takibi.html">Deneme Takibi</a> · <a href="yks-sik-yapilan-hatalar.html">Sık Hatalar</a> · <a href="yks-ek-yerlestirme.html">Ek Yerleştirme</a><br>
+    Veriler ÖSYM ve MEB duyurularına göre güncellenir · Son güncelleme: 28 Eylül 2026
+  </footer>
+</div>
+
+<script>
+var SINAVLAR = {
+  yks: {
+    ad: "YKS", k1baslik: "TYT", k2baslik: "AYT / YDT", diploma: true,
+    k1: [ ["Türkçe", 40], ["Sosyal Bilimler", 25], ["Temel Matematik", 40], ["Fen Bilimleri", 20] ],
+    k2yeni: true
+  },
+  lgs: {
+    ad: "LGS", k1baslik: "LGS", diploma: false,
+    k1: [ ["Türkçe", 20], ["T.C. İnkılap Tarihi", 20], ["Din Kültürü", 10], ["Yabancı Dil", 10], ["Matematik", 20], ["Fen Bilimleri", 20] ]
+  },
+  kpss: {
+    ad: "KPSS", k1baslik: "Genel Yetenek", k2baslik: "Genel Kültür", diploma: false,
+    k1: [ ["Türkçe", 30], ["Matematik", 30] ],
+    k2: [ ["Tarih", 15], ["Coğrafya", 15], ["Vatandaşlık", 15], ["Güncel Bilgiler", 15] ]
+  },
+  dgs: {
+    ad: "DGS", k1baslik: "Sayısal", k2baslik: "Sözel", diploma: true,
+    k1: [ ["Matematik", 60] ],
+    k2: [ ["Türkçe", 60] ]
+  },
+  ales: {
+    ad: "ALES", k1baslik: "Sayısal", k2baslik: "Sözel", diploma: false,
+    k1: [ ["Matematik", 50] ],
+    k2: [ ["Türkçe", 50] ]
+  }
+};
+
+// 2026 YKS gerceklesen sinav verilerine dayali katsayilar
+var YKS2026 = {
+  tyt: { taban: 150.68, kat: [2.71, 3.13, 3.25, 2.58] },
+  sayisal: { taban: 121.65, dersKat: [3.02, 2.53, 2.52, 2.61], tytKat: [1.23, 1.42, 1.47, 1.17] },
+  ea:      { taban: 123.34, dersKat: [2.94, 3.28, 2.37, 2.55], tytKat: [1.20, 1.38, 1.43, 1.14] },
+  sozel:   { taban: 122.72, dersKat: [3.13, 2.26, 2.43, 3.24, 2.93, 4.20, 1.99], tytKat: [1.14, 1.32, 1.37, 1.09] },
+  dil:     { taban: 109.77, dersKat: [2.59], tytKat: [1.42, 1.64, 1.71, 1.35] }
+};
+var SIRA_TABLO = {
+  tyt:    [[150,2187734],[170,2186977],[190,2166477],[210,2033331],[230,1782951],[250,1499060],[270,1219171],[290,961261],[310,735519],[330,553526],[350,412011],[370,305570],[390,225038],[410,163211],[430,115071],[450,76021],[470,45313],[490,22600],[510,8638],[530,2045],[550,112]],
+  sayisal:[[150,1135198],[170,1117304],[190,1019046],[210,858167],[230,681176],[250,533920],[270,425443],[290,344726],[310,282213],[330,232317],[350,191247],[370,157778],[390,129485],[410,105112],[430,83511],[450,63669],[470,44919],[490,27402],[510,12887],[530,3500]],
+  ea:     [[150,1421093],[170,1412649],[190,1347025],[210,1196809],[230,990764],[250,775922],[270,585271],[290,429479],[310,307918],[330,215631],[350,148570],[370,97839],[390,58772],[410,29700],[430,12363],[450,5299],[470,2482],[490,1118],[510,394],[530,98]],
+  sozel:  [[150,1085505],[170,1078859],[190,1040347],[210,953036],[230,814264],[250,642816],[270,474443],[290,333238],[310,223004],[330,140496],[350,82479],[370,45237],[390,22750],[410,10184],[430,4058],[450,1566],[470,606],[490,221],[510,69],[530,14]],
+  dil:    [[150,132714],[170,131233],[190,125789],[210,116152],[230,104127],[250,92274],[270,81109],[290,70670],[310,60948],[330,51784],[350,43129],[370,34585],[390,26352],[410,18566],[430,12254],[450,7472],[470,4241],[490,2252],[510,942],[530,231]]
+};
+function siraTahmin(puan, anchors) {
+  // anchors: artan puan sirali [[puan, sira], ...]
+  var a, b, i;
+  if (puan <= anchors[0][0]) { a = anchors[0]; b = anchors[1]; }
+  else if (puan >= anchors[anchors.length - 1][0]) { a = anchors[anchors.length - 2]; b = anchors[anchors.length - 1]; }
+  else {
+    for (i = 0; i < anchors.length - 1; i++) {
+      if (puan >= anchors[i][0] && puan <= anchors[i + 1][0]) { a = anchors[i]; b = anchors[i + 1]; break; }
+    }
+  }
+  if (!a || !b || a[0] === b[0]) return null;
+  var t = (puan - a[0]) / (b[0] - a[0]);
+  var la = Math.log(a[1]), lb = Math.log(b[1]);
+  return Math.round(Math.exp(la + (lb - la) * t));
+}
+function siraYazi(puan, tur) {
+  var s = siraTahmin(puan, SIRA_TABLO[tur]);
+  if (s === null) return "";
+  return "≈ " + s.toLocaleString("tr-TR") + ". sıra";
+}
+
+var AYT_TESTS = [
+  { ad: "Matematik", max: 40, kat: { sayisal: 3.02, ea: 2.94 } },
+  { ad: "Fizik", max: 14, kat: { sayisal: 2.53 } },
+  { ad: "Kimya", max: 13, kat: { sayisal: 2.52 } },
+  { ad: "Biyoloji", max: 13, kat: { sayisal: 2.61 } },
+  { ad: "Edebiyat", max: 24, kat: { ea: 3.28, sozel: 3.13 } },
+  { ad: "Tarih-1", max: 10, kat: { ea: 2.37, sozel: 2.26 } },
+  { ad: "Coğrafya-1", max: 6, kat: { ea: 2.55, sozel: 2.43 } },
+  { ad: "Tarih-2", max: 11, kat: { sozel: 3.24 } },
+  { ad: "Coğrafya-2", max: 11, kat: { sozel: 2.93 } },
+  { ad: "Felsefe", max: 12, kat: { sozel: 4.20 } },
+  { ad: "Din Kültürü", max: 6, kat: { sozel: 1.99 } },
+  { ad: "Yabancı Dil (YDT)", max: 80, kat: { dil: 2.59 } }
+];
+var AYT_GROUPS = [
+  { ad: "Sayısal", testler: ["Matematik", "Fizik", "Kimya", "Biyoloji"] },
+  { ad: "Eşit Ağırlık", testler: ["Edebiyat", "Tarih-1", "Coğrafya-1"] },
+  { ad: "Sözel", testler: ["Tarih-2", "Coğrafya-2", "Felsefe", "Din Kültürü"] },
+  { ad: "Dil", testler: ["Yabancı Dil (YDT)"] }
+];
+var aktifSinav = "yks", aktifAlan = "sayisal", dahaOnceEl = null;
+var sinavlarEl = document.getElementById("sinavlar"), alanlarEl = document.getElementById("alanlar"),
+    alanlar2El = document.getElementById("alanlar2"), girislerEl = document.getElementById("girisler"),
+    girisler2El = document.getElementById("girisler2"), girislerDEl = document.getElementById("girislerDiploma"),
+    kart2 = document.getElementById("kart2"), kartD = document.getElementById("kartDiploma"),
+    sonuclarEl = document.getElementById("sonuclar");
+
+
+Object.keys(SINAVLAR).forEach(function (k) {
+  var b = document.createElement("button");
+  b.textContent = SINAVLAR[k].ad;
+  if (k === aktifSinav) b.className = "aktif";
+  b.addEventListener("click", function () {
+    aktifSinav = k;
+    Array.prototype.forEach.call(sinavlarEl.children, function (x) { x.classList.remove("aktif"); });
+    b.classList.add("aktif");
+    aktifAlan = "sayisal";
+    kur();
+  });
+  sinavlarEl.appendChild(b);
+});
+
+function sayiSinirla(inp, max) {
+  inp.addEventListener("keydown", function (e) {
+    if (e.key.length === 1 && !/[0-9]/.test(e.key)) e.preventDefault();
+  });
+  inp.addEventListener("input", function () {
+    var val = String(inp.value).replace(/[^0-9]/g, "");
+    if (val !== "") {
+      var n = parseInt(val, 10);
+      if (n > max) n = max;
+      val = String(n);
+    }
+    if (inp.value !== val) inp.value = val;
+  });
+}
+
+function sahaYap(ad, max) {
+  var d = document.createElement("div"); d.className = "saha";
+  d.innerHTML = "<label>" + ad + " (0-" + max + ")</label><input type='number' inputmode='numeric' pattern='[0-9]*' min='0' max='" + max + "' placeholder='0' data-ad='" + ad + "'>";
+  var inp = d.querySelector("input");
+  sayiSinirla(inp, max);
+  inp.addEventListener("keydown", function (e) { if (e.key === "Enter") hesapla(); });
+  return d;
+}
+
+var canliEl = null;
+function canliGuncelle() {
+  if (aktifSinav !== "yks" || !canliEl) { if (canliEl) canliEl.style.display = "none"; return; }
+  function toplam(kapsayici) {
+    var t = 0;
+    Array.prototype.forEach.call(kapsayici.querySelectorAll(".ders-cift"), function (b) {
+      var dEl = b.querySelector(".dD"), yEl = b.querySelector(".dY");
+      var dd = parseFloat(dEl && dEl.value), yy = parseFloat(yEl && yEl.value);
+      t += Math.max(0, (isNaN(dd) ? 0 : dd) - (isNaN(yy) ? 0 : yy) / 4);
+    });
+    return t;
+  }
+  var t1 = toplam(girislerEl), t2 = toplam(girisler2El);
+  if (t1 === 0 && t2 === 0) { canliEl.style.display = "none"; return; }
+  var alanAd = (SINAVLAR.yks.k2alan[aktifAlan] || {}).ad || "";
+  canliEl.style.display = "";
+  canliEl.textContent = "TYT Toplam Net: " + (Math.round(t1 * 100) / 100).toLocaleString("tr-TR") +
+    "  ·  " + alanAd.replace(/ \(.*?\)/, "") + " Toplam Net: " + (Math.round(t2 * 100) / 100).toLocaleString("tr-TR");
+}
+
+function dersBlokYap(ad, max) {
+  var w = document.createElement("div"); w.className = "ders-cift";
+  w.innerHTML = "<div class='dc-lbl'>" + ad + " — Doğru (0-" + max + ")</div>" +
+    "<div class='dc-lbl'>" + ad + " — Yanlış (0-" + max + ")</div>" +
+    "<div class='dc-lbl'>Net</div>" +
+    "<input class='dD' type='number' inputmode='numeric' pattern='[0-9]*' min='0' max='" + max + "' placeholder='0'>" +
+    "<input class='dY' type='number' inputmode='numeric' pattern='[0-9]*' min='0' max='" + max + "' placeholder='0'>" +
+    "<input class='dN' type='text' readonly placeholder='—' tabindex='-1'>";
+  var dI = w.querySelector(".dD"), yI = w.querySelector(".dY"), nI = w.querySelector(".dN");
+  sayiSinirla(dI, max); sayiSinirla(yI, max);
+  function guncelle() {
+    var dd = parseFloat(dI.value), yy = parseFloat(yI.value);
+    if (isNaN(dd) && isNaN(yy)) { nI.value = ""; return; }
+    var d2 = Math.max(0, Math.min(max, isNaN(dd) ? 0 : dd));
+    var y2 = Math.max(0, Math.min(max, isNaN(yy) ? 0 : yy));
+    var n = d2 - y2 / 4;
+    nI.value = Number.isInteger(n) ? String(n) : n.toFixed(2).replace(".", ",");
+    canliGuncelle();
+  }
+  dI.addEventListener("input", guncelle);
+  yI.addEventListener("input", guncelle);
+  dI.addEventListener("keydown", function (e) { if (e.key === "Enter") hesapla(); });
+  yI.addEventListener("keydown", function (e) { if (e.key === "Enter") hesapla(); });
+  return w;
+}
+
+var temaKoyu = false;
+try { temaKoyu = localStorage.getItem("sinavTema") === "koyu"; } catch (e) {}
+function temayiUygula() {
+  if (document.body && document.body.classList) document.body.classList.toggle("tema-koyu", temaKoyu);
+  var tb = document.getElementById("temaBtn");
+  if (tb) tb.textContent = temaKoyu ? "☀" : "☾";
+}
+
+function kur() {
+  var sn = SINAVLAR[aktifSinav];
+  document.getElementById("kartBaslik").textContent = sn.k1baslik;
+  girislerEl.innerHTML = "";
+  sn.k1.forEach(function (d) {
+    if (aktifSinav === "yks") girislerEl.appendChild(dersBlokYap(d[0], d[1]));
+    else girislerEl.appendChild(sahaYap(d[0], d[1]));
+  });
+
+  kart2.style.display = (sn.k2 || aktifSinav === "yks") ? "" : "none";
+  alanlarEl.style.display = "none"; alanlar2El.style.display = "none";
+  if (aktifSinav === "yks") {
+    kart2.style.display = "";
+    kurK2();
+  } else if (sn.k2) {
+    document.getElementById("kart2Baslik").textContent = sn.k2baslik;
+    girisler2El.innerHTML = "";
+    sn.k2.forEach(function (d) { girisler2El.appendChild(sahaYap(d[0], d[1])); });
+  }
+
+  kartD.style.display = sn.diploma ? "" : "none";
+  if (sn.diploma) {
+    girislerDEl.innerHTML = "";
+    girislerDEl.appendChild(sahaYap(aktifSinav === "yks" ? "Diploma puanı (0-100)" : "Önlisans diploma (0-100)", 100));
+    if (aktifSinav === "yks") {
+      var once = document.createElement("div");
+      once.className = "saha";
+      once.style.gridColumn = "1 / -1";
+      once.innerHTML = "<label style='display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;'><input type='checkbox' id='dahaOnce' style='width:18px;height:18px;'> Aynı puan türünde daha önce bir bölüme yerleştim (OBP katkısı yarıya iner)</label>";
+      girislerDEl.appendChild(once);
+      dahaOnceEl = once.querySelector("input");
+      if (dahaOnceEl) dahaOnceEl.addEventListener("change", hesapla);
+    }
+  }
+  hesapla();
+}
+
+function kurK2() {
+  document.getElementById("kart2Baslik").textContent = "AYT / YDT";
+  girisler2El.innerHTML = "";
+  var btnlar = document.createElement("div");
+  btnlar.className = "grup-btnlar";
+  girisler2El.appendChild(btnlar);
+  var grupBtns = {}, grupIcler = {};
+  AYT_GROUPS.forEach(function (g) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "grup-btn";
+    btn.textContent = g.ad;
+    var ic = document.createElement("div");
+    ic.className = "ayt-grup-ic gizli";
+    g.testler.forEach(function (tad) {
+      var t = AYT_TESTS.filter(function (x) { return x.ad === tad; })[0];
+      if (t) ic.appendChild(dersBlokYap(t.ad, t.max));
+    });
+    btn.addEventListener("click", function () {
+      Object.keys(grupBtns).forEach(function (k) {
+        grupBtns[k].classList.toggle("aktif", k === g.ad);
+        grupIcler[k].classList.toggle("gizli", k !== g.ad);
+      });
+    });
+    grupBtns[g.ad] = btn;
+    grupIcler[g.ad] = ic;
+    btnlar.appendChild(btn);
+    girisler2El.appendChild(ic);
+  });
+  hesapla();
+}
+
+function deger(kapsayici) {
+  var toplam = 0;
+  Array.prototype.forEach.call(kapsayici.querySelectorAll("input"), function (i) {
+    var v = parseFloat(i.value) || 0;
+    var mx = parseFloat(i.getAttribute("max")) || 999;
+    toplam += Math.max(0, Math.min(mx, v));
+  });
+  return toplam;
+}
+
+function hesapla() {
+  var sn = SINAVLAR[aktifSinav];
+  if (aktifSinav === "yks") {
+    var b1 = girislerEl.querySelectorAll(".ders-cift");
+    function blokNet2(b) {
+      var dEl = b.querySelector(".dD"), yEl = b.querySelector(".dY");
+      var dd = parseFloat(dEl && dEl.value), yy = parseFloat(yEl && yEl.value);
+      return Math.max(0, (isNaN(dd) ? 0 : dd) - (isNaN(yy) ? 0 : yy) / 4);
+    }
+    var tNet = [0, 0, 0, 0];
+    for (var ti = 0; ti < 4; ti++) tNet[ti] = blokNet2(b1[ti]);
+    var b2l = girisler2El.querySelectorAll(".ders-cift");
+    var testNet = [];
+    for (var ai = 0; ai < AYT_TESTS.length; ai++) testNet.push(blokNet2(b2l[ai]));
+    var dp = v(girislerDEl.querySelectorAll("input"), 0);
+    var obpKatkisi = Math.min(60, dp * 0.6) * (dahaOnceEl && dahaOnceEl.checked ? 0.5 : 1);
+    var girdiVar = false;
+    Array.prototype.forEach.call(b1, function (b) {
+      var dEl = b.querySelector(".dD"), yEl = b.querySelector(".dY");
+      if ((parseFloat(dEl && dEl.value) || 0) > 0 || (parseFloat(yEl && yEl.value) || 0) > 0) girdiVar = true;
+    });
+    Array.prototype.forEach.call(b2l, function (b) {
+      var dEl = b.querySelector(".dD"), yEl = b.querySelector(".dY");
+      if ((parseFloat(dEl && dEl.value) || 0) > 0 || (parseFloat(yEl && yEl.value) || 0) > 0) girdiVar = true;
+    });
+    function satir(ad, ham, aktif) {
+      if (ham === null) return "<tr><td>" + ad + "</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>";
+      var yer = ham + obpKatkisi;
+      function trN(n) { return n.toLocaleString("tr-TR", { maximumFractionDigits: 1 }); }
+      return "<tr><td data-label='Puan Türü'>" + ad + "</td><td data-label='Ham Puan'>" + trN(ham) + "</td>" +
+             "<td data-label='Yerleştirme Puanı'><b>" + trN(yer) + "</b></td><td data-label='Sıralama (Ham)'>" +
+             siraYazi(ham, aktif) + "</td><td data-label='★ Yerleştirme Sıralaması' class='td-yer'>" + siraYazi(yer, aktif) + "</td></tr>";
+    }
+    var tytHam = null, rows = "";
+    if (girdiVar && tNet[0] < 0.5 && tNet[2] < 0.5) {
+      rows = "<tr><td colspan='5' style='text-align:center;color:#b45309;background:#fffbeb'>Baraj sağlanamadı: Türkçe veya Temel Matematik'ten en az 0,5 net gerekir</td></tr>";
+    } else {
+      tytHam = YKS2026.tyt.taban + tNet[0] * YKS2026.tyt.kat[0] + tNet[1] * YKS2026.tyt.kat[1] + tNet[2] * YKS2026.tyt.kat[2] + tNet[3] * YKS2026.tyt.kat[3];
+      rows = satir("TYT", girdiVar ? tytHam : null, "tyt");
+      var alanSira = { sayisal: "sayisal", ea: "ea", sozel: "sozel", dil: "dil" };
+      Object.keys(YKS2026).forEach(function (ak) {
+        if (ak === "tyt") return;
+        var M = YKS2026[ak];
+        var ham = M.taban;
+        var varMi = false;
+        for (var k = 0; k < AYT_TESTS.length; k++) {
+          var kk = AYT_TESTS[k].kat[ak];
+          if (kk) { ham += testNet[k] * kk; if (testNet[k] > 0) varMi = true; }
+        }
+        for (var tk = 0; tk < 4; tk++) ham += tNet[tk] * M.tytKat[tk];
+        var adlar = { sayisal: "Sayısal", ea: "Eşit Ağırlık", sozel: "Sözel", dil: "Dil" };
+        rows += satir(adlar[ak], (girdiVar && varMi) ? ham : null, alanSira[ak]);
+      });
+    }
+    sonuclarEl.innerHTML = "<div class='sonuc-tablosu'><table><thead><tr><th>Puan Türü</th><th>Ham Puan</th><th>Yerleştirme Puanı</th><th>Sıralama (Ham)</th><th class='th-yer'>★ Sıralama (Yerleştirme)</th></tr></thead><tbody>" + rows + "</tbody></table></div>";
+    var cta = document.getElementById("sonucCta");
+    if (cta) {
+      if (girdiVar && tytHam) {
+        cta.href = "taban-puanlari.html?puan=" + Math.round((tytHam + obpKatkisi) * 10) / 10;
+        cta.style.display = "";
+      } else {
+        cta.style.display = "none";
+      }
+    }
+    return;
+  } else if (aktifSinav === "lgs") {
+    var g = girislerEl.querySelectorAll("input");
+    var net = 0;
+    for (var i = 0; i < g.length; i++) net += v(g, i);
+    sonuc = [["Toplam Net", Math.round(net * 10) / 10, true, ""], ["LGS Puanı (yaklaşık)", Math.round(200 + net * 2.9), false, ""]];
+  } else if (aktifSinav === "kpss") {
+    var gk = deger(girislerEl), gkul = deger(girisler2El);
+    sonuc = [["Genel Yetenek Net", Math.round(gk * 10) / 10, false, ""], ["Genel Kültür Net", Math.round(gkul * 10) / 10, false, ""],
+             ["Toplam Net", Math.round((gk + gkul) * 10) / 10, true, ""], ["KPSS Puanı (yaklaşık)", Math.round(70 + (gk + gkul) * 0.35), false, ""]];
+  } else if (aktifSinav === "dgs") {
+    var say = deger(girislerEl), soz = deger(girisler2El);
+    var dp2 = v(girislerDEl.querySelectorAll("input"), 0);
+    sonuc = [["Sayısal Net", Math.round(say * 10) / 10, false, ""], ["Sözel Net", Math.round(soz * 10) / 10, false, ""],
+             ["Sayısal Puan (yaklaşık)", Math.round(150 + say * 1.9 + Math.min(60, dp2 * 0.45)), true, ""],
+             ["Sözel Puan (yaklaşık)", Math.round(150 + soz * 1.9 + Math.min(60, dp2 * 0.45)), false, ""]];
+  } else if (aktifSinav === "ales") {
+    var sNet = deger(girislerEl), zNet = deger(girisler2El);
+    sonuc = [["Sayısal Net", Math.round(sNet * 10) / 10, false, ""], ["Sözel Net", Math.round(zNet * 10) / 10, false, ""],
+             ["Sayısal Puan (yaklaşık)", Math.round(30 + sNet * 1.4), true, ""], ["Sözel Puan (yaklaşık)", Math.round(30 + zNet * 1.4), false, ""]];
+  }
+  sonuclarEl.innerHTML = "";
+  sonuclarEl.innerHTML = "";
+  sonuc.forEach(function (s) {
+    var d = document.createElement("div");
+    d.className = "puan-kutu" + (s[2] ? " one" : "");
+    var alt = (s[3] ? "<div class='sr'>" + s[3] + "</div>" : "");
+    if (typeof s[1] === "number") {
+      d.innerHTML = "<div class='t'>" + s[0] + "</div><div class='d'>0</div>" + alt;
+      sonuclarEl.appendChild(d);
+      var hedef = s[1], el = d.querySelector(".d"), bas = performance.now();
+      function say(adim) {
+        var t = Math.min(1, (adim - bas) / 650);
+        var yum = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(hedef * yum);
+        if (t < 1 && el.isConnected !== false) requestAnimationFrame(say);
+      }
+      requestAnimationFrame(say);
+    } else {
+      d.innerHTML = "<div class='t'>" + s[0] + "</div><div class='d'>" + s[1] + "</div>" + alt;
+      sonuclarEl.appendChild(d);
+    }
+  });
+}
+
+function v(inputs, i) {
+  var el = inputs[i];
+  if (!el) return 0;
+  var mx = parseFloat(el.getAttribute("max")) || 999;
+  var val = parseFloat(el.value) || 0;
+  return Math.max(0, Math.min(mx, val));
+}
+
+
+// TABAN-BASLA
+canliEl = document.getElementById("canli");
+var hesaplaBtn = document.getElementById("hesaplaBtn");
+if (hesaplaBtn) hesaplaBtn.addEventListener("click", function () {
+  hesapla();
+  setTimeout(function () {
+    if (sonuclarEl && sonuclarEl.scrollIntoView) sonuclarEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 90);
+});
+var temaBtn = document.getElementById("temaBtn");
+if (temaBtn) temaBtn.addEventListener("click", function () {
+  temaKoyu = !temaKoyu;
+  try { localStorage.setItem("sinavTema", temaKoyu ? "koyu" : "acik"); } catch (e) {}
+  temayiUygula();
+});
+temayiUygula();
+kur();
+</script>
+</body>
+</html>
