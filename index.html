@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sinavnetim.com — YKS, LGS, KPSS Net ve Puan Hesaplama</title>
+<meta name="description" content="YKS, LGS, KPSS, DGS ve ALES net ve puan hesaplama. 2026 gerçek katsayılarıyla, sıralama tahminli. Ücretsiz, kayıtsız, saniyeler içinde.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; color: #1a1a2e;
+    background: linear-gradient(180deg, #f4f2ff 0%, #eef4ff 45%, #f6f7fb 100%); min-height: 100vh; line-height: 1.6; }
+  .kapsayici { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; }
+  header { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+  .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; color: inherit; }
+  .temaBtn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #dfe2ee; background: #fff; font-size: 17px; color: #4b5563; cursor: pointer; }
+  nav a { margin-left: 14px; font-size: 14px; font-weight: 600; color: #4b5563; text-decoration: none; }
+  nav a:hover { color: #6d28d9; }
+  .hero { text-align: center; padding: 52px 0 30px; }
+  .hero-t { font-size: 42px; line-height: 1.12; letter-spacing: -1px; color: #111827; }
+  .hero-t span { background: linear-gradient(90deg, #6d28d9, #4f46e5, #38bdf8, #6d28d9); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: akis 6s linear infinite; }
+  @keyframes akis { to { background-position: 300% 0; } }
+  .hero-s { color: #5b6478; font-size: 16px; margin-top: 14px; max-width: 520px; margin-left: auto; margin-right: auto; }
+  .guven { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+  .guven span { font-size: 11.5px; font-weight: 600; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 999px; padding: 5px 13px; }
+  .cta { display: inline-block; margin-top: 26px; padding: 16px 44px; border-radius: 14px; background: linear-gradient(135deg, #6d28d9, #4f46e5); color: #fff; font-weight: 800; font-size: 17px; letter-spacing: 1px; text-decoration: none; box-shadow: 0 8px 26px rgba(109,40,217,0.35); transition: transform 0.15s; }
+  .cta:hover { transform: translateY(-2px); }
+  .bolum-t { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #6d28d9; margin: 38px 0 14px; }
+  .araclar { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .arac { display: block; background: #fff; border: 1px solid #e8eaf3; border-radius: 18px; padding: 20px; text-decoration: none; color: inherit; transition: all 0.18s; box-shadow: 0 2px 10px rgba(20,20,60,0.04); }
+  .arac:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(109,40,217,0.14); border-color: #c4b5fd; }
+  .arac .a-t { font-size: 16px; font-weight: 700; color: #111827; }
+  .arac .a-d { font-size: 13px; color: #6b7280; margin-top: 5px; }
+  .arac .a-ok { font-size: 13px; font-weight: 700; color: #6d28d9; margin-top: 10px; }
+  .arac.one { background: linear-gradient(135deg, #6d28d9, #4f46e5); border: none; }
+  .arac.one .a-t, .arac.one .a-ok { color: #fff; }
+  .arac.one .a-d { color: #ddd6fe; }
+  .rehberler { display: flex; flex-wrap: wrap; gap: 8px; }
+  .rehberler a { font-size: 13px; font-weight: 600; color: #4b5563; background: #fff; border: 1px solid #e8eaf3; border-radius: 999px; padding: 8px 16px; text-decoration: none; transition: all 0.15s; }
+  .rehberler a:hover { color: #6d28d9; border-color: #c4b5fd; }
+  footer { text-align: center; color: #9ca3af; font-size: 12px; margin-top: 44px; line-height: 1.9; }
+  footer a { color: #6d28d9; text-decoration: none; }
+  body.tema-koyu { background: #0e0e16; color: #e8e8f0; }
+  body.tema-koyu .hero-t { color: #f0f0f5; }
+  body.tema-koyu .hero-s { color: #9a9ab0; }
+  body.tema-koyu .arac, body.tema-koyu .rehberler a { background: #1b1b28; border-color: #2c2c3e; color: #e8e8f0; }
+  body.tema-koyu .arac .a-t { color: #f0f0f5; }
+  body.tema-koyu .arac .a-d { color: #9a9ab0; }
+  body.tema-koyu .arac .a-ok { color: #a78bfa; }
+  body.tema-koyu .arac:hover { border-color: #4c3a78; }
+  body.tema-koyu .guven span { background: #0f2a1e; border-color: #1d4d38; color: #6ee7b7; }
+  body.tema-koyu .temaBtn { background: #1b1b28; border-color: #34344a; color: #e8e8f0; }
+  body.tema-koyu nav a { color: #b8b8cc; }
+
+  .rehberler { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+  .rarac { display: flex; align-items: center; gap: 11px; background: #fff; border: 1px solid #e8eaf3; border-radius: 16px; padding: 13px 15px; text-decoration: none; transition: all 0.16s; box-shadow: 0 2px 8px rgba(20,20,60,0.04); }
+  .rarac:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(109,40,217,0.12); border-color: #c4b5fd; }
+  .rarac span { font-size: 13.5px; font-weight: 600; color: #374151; }
+  .rarac:hover span { color: #6d28d9; }
+  body.tema-koyu .rarac { background: #1b1b28; border-color: #2c2c3e; }
+  body.tema-koyu .rarac span { color: #d5d5e5; }
+  body.tema-koyu .rarac:hover { border-color: #4c3a78; }
+</style>
+<meta name="google-site-verification" content="hC3FCywEa1X5X2-nJQ16MJ50VPUu-BHk4L2NOMPrXtA" />
+<script src="https://cdn.counter.dev/script.js" data-id="879c2efc-1b4e-4c6e-af39-744c50ae3f02" data-utcoffset="3"></script>
+</head>
+<body>
+<div class="kapsayici">
+  <header>
+    <a class="logo" href="index.html">
+      <svg width="34" height="34" viewBox="0 0 26 26">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#3b82f6"/>
+        </linearGradient></defs>
+        <rect x="1" y="1" width="24" height="24" rx="8" fill="url(#lg)"/>
+        <path d="M6 19 L6 8.5 L10.5 14.5 L13 10.5 L15.5 14.5 L20 8.5 L20 19" stroke="#fff" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="20" cy="8.5" r="2" fill="#fff"/>
+      </svg>
+      <span style="font-size:20px;font-weight:800;letter-spacing:-0.5px">Net<span style="color:#6d28d9">Hesapla</span></span>
+    </a>
+    <nav>
+      <a href="yks-hesaplama.html">Hesaplayıcı</a>
+      <a href="#rehberler">Rehberler</a>
+    </nav>
+    <button class="temaBtn" id="temaBtn" aria-label="Gece modu">☾</button>
+  </header>
+
+  <div class="hero">
+    <h1 class="hero-t">Netlerini saniyeler içinde<br><span>hesapla</span></h1>
+    <div class="hero-s">YKS, LGS, KPSS, DGS ve ALES için 2026 gerçek katsayılarıyla puan hesaplama ve sıralama tahmini — hepsi tek yerde.</div>
+    <div class="guven">
+      <span>✓ 2026 ÖSYM verileri</span>
+      <span>✓ Ücretsiz</span>
+      <span>✓ Kayıt gerekmez</span>
+      <span>✓ 16 rehber</span>
+    </div>
+    <a class="cta" href="yks-hesaplama.html">HESAPLAMAYA BAŞLA →</a>
+  </div>
+
+  <div class="bolum-t">HESAPLAMA ARAÇLARI</div>
+  <div class="araclar">
+    <a class="arac one" href="yks-hesaplama.html">
+      <div class="a-t">YKS Puan Hesaplayıcı</div>
+      <div class="a-d">TYT + AYT doğru/yanlış gir, 2026 katsayılarıyla puanın ve sıralaman anında çıksın.</div>
+      <div class="a-ok">Hesapla →</div>
+    </a>
+    <a class="arac" href="yks-siralama-tahmini.html">
+      <div class="a-t">Sıralama Tahmini</div>
+      <div class="a-d">Puanının yaklaşık kaç bin sıralığa denk geldiğini gör.</div>
+      <div class="a-ok">İncele →</div>
+    </a>
+    <a class="arac" href="obp-diploma-puani.html">
+      <div class="a-t">OBP (Diploma Puanı)</div>
+      <div class="a-d">Diploma puanın yerleştirmene nasıl 60 puana kadar eklenir?</div>
+      <div class="a-ok">Öğren →</div>
+    </a>
+    <a class="arac" href="yks-katsayilari.html">
+      <div class="a-t">2026 Katsayıları</div>
+      <div class="a-d">TYT ve AYT ders katsayılarının tam tablosu.</div>
+      <div class="a-ok">Tabloya bak →</div>
+    </a>
+    <a class="arac" href="taban-puanlari.html">
+      <div class="a-t">Taban Puanları 2022-2026</div>
+      <div class="a-d">Her bölümün son 5 yıllık taban puanı geçmişi.</div>
+      <div class="a-ok">Geçmişi gör →</div>
+    </a>
+  </div>
+
+  <div class="bolum-t" id="rehberler">REHBERLER</div>
+  <div class="rehberler">
+    <a class="rarac" href="yks-puan-hesaplama.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="16" height="19" rx="3"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11.5" x2="8" y2="11.6"/><line x1="12" y1="11.5" x2="12" y2="11.6"/><line x1="16" y1="11.5" x2="16" y2="11.6"/><line x1="8" y1="15.5" x2="8" y2="15.6"/><line x1="12" y1="15.5" x2="12" y2="15.6"/><line x1="16" y1="15.5" x2="16" y2="18"/></svg><span>YKS Puanı Nasıl Hesaplanır?</span></a>
+    <a class="rarac" href="tyt-net-hesaplama.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="16" height="19" rx="3"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11.5" x2="8" y2="11.6"/><line x1="12" y1="11.5" x2="12" y2="11.6"/><line x1="16" y1="11.5" x2="16" y2="11.6"/><line x1="8" y1="15.5" x2="8" y2="15.6"/><line x1="12" y1="15.5" x2="12" y2="15.6"/><line x1="16" y1="15.5" x2="16" y2="18"/></svg><span>TYT Net Hesaplama</span></a>
+    <a class="rarac" href="ayt-net-hesaplama.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="16" height="19" rx="3"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11.5" x2="8" y2="11.6"/><line x1="12" y1="11.5" x2="12" y2="11.6"/><line x1="16" y1="11.5" x2="16" y2="11.6"/><line x1="8" y1="15.5" x2="8" y2="15.6"/><line x1="12" y1="15.5" x2="12" y2="15.6"/><line x1="16" y1="15.5" x2="16" y2="18"/></svg><span>AYT Net Hesaplama</span></a>
+    <a class="rarac" href="tyt-baraj-05-net.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 L20 6 V12 C20 17 16.5 20.5 12 21.5 C7.5 20.5 4 17 4 12 V6 Z"/><polyline points="8.5,12 11,14.5 15.5,9.5"/></svg><span>TYT Barajı Kaç Net?</span></a>
+    <a class="rarac" href="tyt-ayt-farki.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="7,4 3,8 7,12"/><polyline points="17,12 21,16 17,20"/><line x1="3" y1="8" x2="21" y2="8" stroke-dasharray="2.5 2.5"/><line x1="3" y1="16" x2="21" y2="16" stroke-dasharray="2.5 2.5"/></svg><span>TYT-AYT Farkı</span></a>
+    <a class="rarac" href="yks-sik-yapilan-hatalar.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 L22 20 H2 Z"/><line x1="12" y1="10" x2="12" y2="14.5"/><line x1="12" y1="17.2" x2="12" y2="17.3"/></svg><span>Sık Yapılan Hatalar</span></a>
+    <a class="rarac" href="deneme-net-takibi.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="4" y2="4"/><line x1="4" y1="20" x2="20" y2="20"/><polyline points="7,15 11,10 14,13 19,6"/></svg><span>Deneme Net Takibi</span></a>
+    <a class="rarac" href="yks-ek-yerlestirme.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,7 20,13 14,13"/><path d="M19 13 A8 8 0 1 0 20 9"/></svg><span>Ek Yerleştirme</span></a>
+    <a class="rarac" href="yks-siralama-tahmini.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="4" y2="4"/><line x1="4" y1="20" x2="20" y2="20"/><polyline points="7,15 11,10 14,13 19,6"/></svg><span>Sıralama Tahmini</span></a>
+    <a class="rarac" href="lgs-net-hesaplama.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5 C7 3 10 3.5 12 5.5 C14 3.5 17 3 20 4.5 V19 C17 17.5 14 18 12 20 C10 18 7 17.5 4 19 Z"/><line x1="12" y1="5.5" x2="12" y2="20"/></svg><span>LGS Net</span></a>
+    <a class="rarac" href="kpss-puan-hesaplama.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5 C7 3 10 3.5 12 5.5 C14 3.5 17 3 20 4.5 V19 C17 17.5 14 18 12 20 C10 18 7 17.5 4 19 Z"/><line x1="12" y1="5.5" x2="12" y2="20"/></svg><span>KPSS Puan</span></a>
+    <a class="rarac" href="dgs-puan-hesaplama.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5 C7 3 10 3.5 12 5.5 C14 3.5 17 3 20 4.5 V19 C17 17.5 14 18 12 20 C10 18 7 17.5 4 19 Z"/><line x1="12" y1="5.5" x2="12" y2="20"/></svg><span>DGS Puan</span></a>
+    <a class="rarac" href="ales-puan-hesaplama.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6d28d9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5 C7 3 10 3.5 12 5.5 C14 3.5 17 3 20 4.5 V19 C17 17.5 14 18 12 20 C10 18 7 17.5 4 19 Z"/><line x1="12" y1="5.5" x2="12" y2="20"/></svg><span>ALES Puan</span></a>
+  </div>
+
+  <footer>
+    Veriler ÖSYM ve MEB duyurularına göre güncellenir · Son güncelleme: 28 Eylül 2026<br>
+    <a href="yks-hesaplama.html">Hesaplayıcı</a> · <a href="#rehberler">Rehberler</a> · sinavnetim.com
+  </footer>
+</div>
+<script>
+var temaKoyu = false;
+try { temaKoyu = localStorage.getItem("sinavTema") === "koyu"; } catch (e) {}
+function temayiUygula() {
+  if (document.body && document.body.classList) document.body.classList.toggle("tema-koyu", temaKoyu);
+  var tb = document.getElementById("temaBtn");
+  if (tb) tb.textContent = temaKoyu ? "☀" : "☾";
+}
+document.getElementById("temaBtn").addEventListener("click", function () {
+  temaKoyu = !temaKoyu;
+  try { localStorage.setItem("sinavTema", temaKoyu ? "koyu" : "acik"); } catch (e) {}
+  temayiUygula();
+});
+temayiUygula();
+</script>
+</body>
+</html>
